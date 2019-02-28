@@ -1,4 +1,4 @@
-package com.ryg.chapter_3.ui;
+package com.ryg.chapter_4.ui;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -43,8 +43,10 @@ public class HorizontalScrollViewEx extends ViewGroup {
     }
 
     private void init() {
-        mScroller = new Scroller(getContext());
-        mVelocityTracker = VelocityTracker.obtain();
+        if (mScroller == null) {
+            mScroller = new Scroller(getContext());
+            mVelocityTracker = VelocityTracker.obtain();
+        }
     }
 
     @Override
@@ -109,13 +111,11 @@ public class HorizontalScrollViewEx extends ViewGroup {
         }
         case MotionEvent.ACTION_UP: {
             int scrollX = getScrollX();
-            int scrollToChildIndex = scrollX / mChildWidth;
             mVelocityTracker.computeCurrentVelocity(1000);
             float xVelocity = mVelocityTracker.getXVelocity();
             if (Math.abs(xVelocity) >= 50) {
                 mChildIndex = xVelocity > 0 ? mChildIndex - 1 : mChildIndex + 1;
             } else {
-                //用scrollX=0去理解，就是只要超过1一半就滑动到下页，小于或者等于一半就是返回之前页面
                 mChildIndex = (scrollX + mChildWidth / 2) / mChildWidth;
             }
             mChildIndex = Math.max(0, Math.min(mChildIndex, mChildrenSize - 1));
@@ -147,6 +147,11 @@ public class HorizontalScrollViewEx extends ViewGroup {
         int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
         if (childCount == 0) {
             setMeasuredDimension(0, 0);
+        } else if (widthSpecMode == MeasureSpec.AT_MOST && heightSpecMode == MeasureSpec.AT_MOST) {
+            final View childView = getChildAt(0);
+            measuredWidth = childView.getMeasuredWidth() * childCount;
+            measuredHeight = childView.getMeasuredHeight();
+            setMeasuredDimension(measuredWidth, measuredHeight);
         } else if (heightSpecMode == MeasureSpec.AT_MOST) {
             final View childView = getChildAt(0);
             measuredHeight = childView.getMeasuredHeight();
@@ -155,11 +160,6 @@ public class HorizontalScrollViewEx extends ViewGroup {
             final View childView = getChildAt(0);
             measuredWidth = childView.getMeasuredWidth() * childCount;
             setMeasuredDimension(measuredWidth, heightSpaceSize);
-        } else {
-            final View childView = getChildAt(0);
-            measuredWidth = childView.getMeasuredWidth() * childCount;
-            measuredHeight = childView.getMeasuredHeight();
-            setMeasuredDimension(measuredWidth, measuredHeight);
         }
     }
 
