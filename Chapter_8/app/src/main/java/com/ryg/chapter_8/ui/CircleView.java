@@ -1,6 +1,6 @@
-package com.ryg.chapter_4.ui;
+package com.ryg.chapter_8.ui;
 
-import com.ryg.chapter_4.R;
+import com.ryg.chapter_8.R;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -38,7 +38,7 @@ public class CircleView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
@@ -47,7 +47,7 @@ public class CircleView extends View {
                 && heightSpecMode == MeasureSpec.AT_MOST) {
             setMeasuredDimension(200, 200);
         } else if (widthSpecMode == MeasureSpec.AT_MOST) {
-            setMeasuredDimension(500, heightSpecSize);
+            setMeasuredDimension(200, heightSpecSize);
         } else if (heightSpecMode == MeasureSpec.AT_MOST) {
             setMeasuredDimension(widthSpecSize, 200);
         }
@@ -57,9 +57,9 @@ public class CircleView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         final int paddingLeft = getPaddingLeft();
-        final int paddingRight = getPaddingRight();
-        final int paddingTop = getPaddingTop();
-        final int paddingBottom = getPaddingBottom();
+        final int paddingRight = getPaddingLeft();
+        final int paddingTop = getPaddingLeft();
+        final int paddingBottom = getPaddingLeft();
         int width = getWidth() - paddingLeft - paddingRight;
         int height = getHeight() - paddingTop - paddingBottom;
         int radius = Math.min(width, height) / 2;
